@@ -1,30 +1,14 @@
-import { useState, useEffect } from "react"
-import GameCard from "./components/GameCard"
-
-
+import { Routes, Route } from 'react-router-dom'
+import Home from './pages/Home'
+import GameDetail from './pages/GameDetail'
 
 function App() {
-  const [games, setGames] = useState([])
-
-  useEffect(() => {
-    fetch("https://www.cheapshark.com/api/1.0/deals?pageSize=12&sortBy=DealRating")
-      .then((res) => res.json())
-      .then((data) => setGames(data))
-  }, [])
-
   return (
-      <section>
-        <h1>Game Track</h1>
-
-
-        <div className='grid grid-cols-3 gap-4 p-4'>
-          {games.map((game) =>(
-            <GameCard key={game.dealID} title={game.title} thumb={game.thumb} price={game.salePrice} rating={game.steamRatingPercent} />
-          ))}
-        </div>
-      </section>
-         )
-      
+    <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/game/:dealID' element={<GameDetail />} />
+    </Routes>
+  )
 }
 
 export default App
