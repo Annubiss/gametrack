@@ -1,29 +1,40 @@
 import { useState, useEffect } from "react"
 import GameCard from "../components/GameCard"
+import { Link } from 'react-router-dom'
 
 
 
 function Home() {
   const [games, setGames] = useState([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     fetch("https://www.cheapshark.com/api/1.0/deals?pageSize=12&sortBy=DealRating")
       .then((res) => res.json())
       .then((data) => setGames(data))
-      .then(setLoading(false))
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false))
+
   }, [])
 
   return (
       <section>
         <h1>Game Track</h1>
-          {loading ? ("Se incarca..."
-
-          ):(<div className='grid grid-cols-3 gap-4 p-4'>
-          {games.map((game) =>(
-            <GameCard key={game.dealID} title={game.title} thumb={game.thumb} price={game.salePrice} rating={game.steamRatingPercent} />
-          ))}
-        </div>)}
+          {error ? (
+            <p className="text-red-500">Error: {error}</p>
+          ) : loading ? (
+            "Loading..."
+          ) : (
+            <div className="grid grid-cols-3 gap-4 p-4">
+              {games.map((game) => (
+                <Link key={game.dealID} to={`/game/${game.dealID}`}>
+                  <GameCard title={game.title} thumb={game.thumb} price={game.price} rating={game.steamRatingPercent} />
+                </Link>
+              ))}
+            </div>
+          )
+          }
 
         
       </section>
