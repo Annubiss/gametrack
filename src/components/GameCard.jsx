@@ -5,7 +5,8 @@ function GameCard(props) {
             <h2>{props.title}</h2>
             <p>Price: {props.price}</p>
             <h3>{props.genre}</h3>
-            <p>Rating: {props.rating}</p>
+            <p>{props.rating > 0 ? `Positive steam reviews: ${props.rating}%` : "No steam rating"}</p>
+            {props.rating >= 90 && <p>⭐ Must play</p> }
         </div>
     )
 }

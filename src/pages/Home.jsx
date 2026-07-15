@@ -11,7 +11,10 @@ function Home() {
 
   useEffect(() => {
     fetch("https://www.cheapshark.com/api/1.0/deals?pageSize=12&sortBy=DealRating")
-      .then((res) => res.json())
+      .then((res) => {
+        if(!res.ok) throw new Error(`HTTP ${res.status}`)
+          return res.json()
+      })
       .then((data) => setGames(data))
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false))
@@ -28,8 +31,9 @@ function Home() {
           ) : (
             <div className="grid grid-cols-3 gap-4 p-4">
               {games.map((game) => (
-                <Link key={game.dealID} to={`/game/${game.dealID}`}>
-                  <GameCard title={game.title} thumb={game.thumb} price={game.price} rating={game.steamRatingPercent} />
+                <Link key={game.dealID} to={`/game/${encodeURIComponent(game.dealID)}`}>
+                  <GameCard title={game.title} thumb={game.thumb} price={game.salePrice} rating={game.steamRatingPercent}/>
+                  
                 </Link>
               ))}
             </div>
